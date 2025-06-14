@@ -36,7 +36,9 @@ logs/
 *.log
 
 # Temporary files
-quest_*
+quest_temp*
+quest_backup*
+quest_test*
 temp/
 tmp/
 
