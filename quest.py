@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from src.game_engine import GameEngine
 from src.level_loader import LevelLoader, LevelValidationError
+from src.quest_generator import QuestGenerator
 
 
 def setup_logging(verbose: bool = False):
@@ -112,6 +113,33 @@ def cmd_stats(args):
         sys.exit(1)
 
 
+def cmd_generate(args):
+    """Generate quest documentation and templates."""
+    try:
+        generator = QuestGenerator(args.levels_file)
+        
+        if args.output:
+            # Generate quest documentation
+            generator.generate_quest_documentation(args.output)
+        elif args.template:
+            # Generate level template
+            generator.generate_level_template()
+        elif args.update_readme:
+            # Update README with quest content
+            generator.update_readme()
+        else:
+            # Default: generate both documentation and template
+            generator.generate_quest_documentation()
+            generator.generate_level_template()
+            
+    except Exception as e:
+        print(f"[ERROR] Error generating content: {e}")
+        if args.verbose:
+            import traceback
+            traceback.print_exc()
+        sys.exit(1)
+
+
 def main():
     """Main entry point."""
     parser = argparse.ArgumentParser(
@@ -122,6 +150,7 @@ Examples:
   %(prog)s play                    # Start the interactive game
   %(prog)s validate               # Validate level definitions
   %(prog)s stats                  # Show quest statistics
+  %(prog)s generate               # Generate documentation and templates
         """
     )
     
@@ -159,6 +188,24 @@ Examples:
         help="Show detailed level information"
     )
     stats_parser.set_defaults(func=cmd_stats)
+    
+    # Generate command
+    generate_parser = subparsers.add_parser("generate", help="Generate quest documentation and templates")
+    generate_parser.add_argument(
+        "--output",
+        help="Generate quest documentation to specified file"
+    )
+    generate_parser.add_argument(
+        "--template",
+        action="store_true",
+        help="Generate level creation template"
+    )
+    generate_parser.add_argument(
+        "--update-readme",
+        action="store_true",
+        help="Update README.md with quest content"
+    )
+    generate_parser.set_defaults(func=cmd_generate)
     
     # Parse arguments
     args = parser.parse_args()

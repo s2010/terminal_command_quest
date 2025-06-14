@@ -1,95 +1,87 @@
-# [QUEST] Terminal Command Quest
+# Terminal Command Quest
 
-*Learn UNIX commands through interactive adventures!*
+An interactive text-adventure game that teaches UNIX commands through hands-on challenges.
 
-<!-- QUEST-START -->
-<!-- This content is auto-generated. Do not edit manually. -->
-
-## Overview
-
-Welcome to the Terminal Command Quest - an interactive text-adventure game that teaches essential UNIX/Linux commands through hands-on challenges. Navigate through a mysterious digital realm where each location represents a different command mastery level.
-
-## Current Quest Status
+## Quest Overview
 
 - **Total Levels**: 6
-- **Categories**: 5 (Archives, File Operations, Permissions, Search, Text Processing)  
-- **Total Points**: 135
-- **Difficulty Range**: Beginner → Advanced
-- **Estimated Completion**: 45-60 minutes
+- **Categories**: archives, file_operations, permissions, search, text_processing
+- **Difficulty Range**: advanced, beginner, intermediate
+- **Total Points Available**: 135
 
-## Level Progression
+## Available Levels
 
-### 1. **The Home Directory** [EASY]
-*File Operations • 10 Points*
-Learn basic navigation with `ls`, `pwd`, and `cd` commands. Master the art of directory exploration in the digital realm.
 
-### 2. **The Search Chamber** [MEDIUM]
-*Search • 20 Points*
-Master `find` and `grep` commands to locate hidden treasures across countless scrolls and secret compartments.
+### Level 1: The Home Directory
 
-### 3. **The Text Editor's Lair** [EASY]
-*Text Processing • 15 Points*
-Conquer `cat`, `head`, `tail`, and `less` commands for text mastery in the Archive Caverns.
+- **Category**: file_operations
+- **Difficulty**: beginner
+- **Points**: 10
+- **Description**: Learn basic navigation with ls, pwd, and cd commands
 
-### 4. **The Permission Fortress** [MEDIUM]
-*Permissions • 25 Points*
-Understand `chmod`, `chown`, and file permissions to pass through the imposing digital fortress.
+**Challenge**: Discover what treasures lie hidden in the quest_treasures directory
 
-### 5. **The Link Laboratory** [HARD]
-*File Operations • 30 Points*
-Connect files and directories with `ln` and symbolic links in the mysterious depths of the digital realm.
 
-### 6. **The Archive Vault** [HARD]
-*Archives • 35 Points*
-Compress and extract files with `tar`, `gzip`, and `zip` to claim the ultimate treasure.
+### Level 2: The Search Chamber
 
-## Achievement System
+- **Category**: search
+- **Difficulty**: intermediate
+- **Points**: 20
+- **Description**: Master find and grep commands to locate hidden treasures
 
-Earn achievements as you progress:
-- **Quest Master**: Complete all levels
-- **Speed Runner**: Complete quest in under 30 minutes
-- **Perfect Score**: Complete without using hints
-- **Explorer**: Discover all easter eggs
-- **Level Creator**: Add a custom level
+**Challenge**: Find all files ending with '.txt' in the search_chamber directory and subdirectories
+
+
+### Level 3: The Text Editor's Lair
+
+- **Category**: text_processing
+- **Difficulty**: beginner
+- **Points**: 15
+- **Description**: Conquer cat, head, tail, and less commands for text mastery
+
+**Challenge**: Display the contents of the sacred_scroll.txt file in the text_lair directory
+
+
+### Level 4: The Permission Fortress
+
+- **Category**: permissions
+- **Difficulty**: intermediate
+- **Points**: 25
+- **Description**: Understand chmod, chown, and file permissions
+
+**Challenge**: Make the locked_treasure.txt file readable by everyone using chmod
+
+
+### Level 5: The Link Laboratory
+
+- **Category**: file_operations
+- **Difficulty**: advanced
+- **Points**: 30
+- **Description**: Connect files and directories with ln and symbolic links
+
+**Challenge**: Create a symbolic link named 'shortcut_to_artifact' in the shortcuts directory that points to the magic_artifact.txt file
+
+
+### Level 6: The Archive Vault
+
+- **Category**: archives
+- **Difficulty**: advanced
+- **Points**: 35
+- **Description**: Compress and extract files with tar, gzip, and zip
+
+**Challenge**: Create a tar archive named 'treasure_archive.tar' containing all files from the treasure_collection directory
+
 
 ## Getting Started
 
-### Quick Start
-```bash
-git clone https://github.com/yourusername/terminal_command_quest.git
-cd terminal_command_quest
-./quest.sh
-```
+1. Clone this repository
+2. Install dependencies: `pip install -r requirements.txt`
+3. Start your quest: `python quest.py play`
 
-### Manual Setup
-```bash
-pip install -r requirements.txt
-python3 quest.py play
-```
+## Commands
 
-## Game Commands
+- `python quest.py play` - Start the interactive game
+- `python quest.py validate` - Validate level definitions
+- `python quest.py stats` - Show quest statistics
 
-| Command | Description |
-|---------|-------------|
-| `help` | Show available commands |
-| `hint` | Get a hint for current challenge |
-| `skip` | Skip current level (with penalty) |
-| `progress` | View your current progress |
-| `exit` | Exit the game |
-
-## Educational Value
-
-This quest covers essential UNIX commands that every developer should know:
-
-- **Navigation**: `ls`, `cd`, `pwd`
-- **File Operations**: `cp`, `mv`, `rm`, `mkdir`
-- **Text Processing**: `cat`, `grep`, `sed`, `awk`
-- **Permissions**: `chmod`, `chown`, `chgrp`
-- **Search**: `find`, `locate`, `which`
-- **Archives**: `tar`, `gzip`, `zip`
-
-<!-- QUEST-END -->
-
----
-
-**Ready to embark on your Terminal Command Quest?** Clone this repo and start your journey to UNIX mastery!
+Enjoy your journey through the terminal!
