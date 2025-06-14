@@ -1,0 +1,253 @@
+# Terminal Command Quest - Level Definitions
+# This file defines all the levels in the quest, their challenges, and rewards.
+
+- id: "home_directory"
+  title: "The Home Directory"
+  description: "Learn basic navigation with ls, pwd, and cd commands"
+  category: "file_operations"
+  difficulty: "beginner"
+  points: 10
+
+  story: |
+    Welcome, brave adventurer! You find yourself in a mysterious digital realm 
+    where directories are kingdoms and files are treasures. Your quest begins 
+    in the Home Directory, a sacred place where all journeys start.
+    
+    The ancient scrolls speak of a command that can reveal the contents of any 
+    directory. Master this power, and you shall be ready for greater challenges.
+
+  setup_commands:
+    - "mkdir -p quest_treasures"
+    - "touch quest_treasures/ancient_scroll.txt"
+    - "touch quest_treasures/magic_key.txt"
+    - "touch quest_treasures/golden_coin.txt"
+
+  challenge: "Discover what treasures lie hidden in the quest_treasures directory"
+
+  expected_command: "ls quest_treasures"
+  expected_output: |
+    ancient_scroll.txt
+    golden_coin.txt
+    magic_key.txt
+
+  hints:
+    - "Try using the 'ls' command to list files and directories"
+    - "The directory you need to explore is called 'quest_treasures'"
+    - "Use: ls quest_treasures"
+
+  rewards:
+    - "Excellent! You've discovered the power of the 'ls' command!"
+    - "With this knowledge, you can explore any directory in the realm."
+    - "The treasures you found will aid you in future challenges."
+
+  cleanup_commands:
+    - "rm -rf quest_treasures"
+
+- id: "search_chamber"
+  title: "The Search Chamber"
+  description: "Master find and grep commands to locate hidden treasures"
+  category: "search"
+  difficulty: "intermediate"
+  points: 20
+
+  story: |
+    You enter the mystical Search Chamber, where ancient knowledge is scattered 
+    across countless scrolls and hidden in secret compartments. The Chamber 
+    Guardian challenges you to find a specific treasure buried deep within.
+    
+    "Many have tried," whispers the Guardian, "but only those who master the 
+    arts of searching can claim the treasure. You must learn to find both files 
+    and the secrets they contain."
+
+  setup_commands:
+    - "mkdir -p search_chamber/scrolls search_chamber/artifacts search_chamber/maps"
+    - "touch search_chamber/scrolls/wisdom.txt"
+    - "touch search_chamber/artifacts/ancient_vase.txt"  
+    - "touch search_chamber/maps/treasure_map.txt"
+    - "echo 'The GOLDEN_KEY opens the door to ultimate power' > search_chamber/scrolls/wisdom.txt"
+    - "echo 'This vase holds memories of ancient civilizations' > search_chamber/artifacts/ancient_vase.txt"
+    - "echo 'X marks the spot where the treasure lies buried' > search_chamber/maps/treasure_map.txt"
+
+  challenge: "Find all files ending with '.txt' in the search_chamber directory and subdirectories"
+
+  expected_command: "regex:find.*search_chamber.*-name.*\\.txt"
+
+  hints:
+    - "The 'find' command can search for files by name, type, or other criteria"
+    - "Use the -name option to search by filename pattern"
+    - "To find all .txt files: find search_chamber -name '*.txt'"
+    - "Remember to escape special characters like * with quotes"
+
+  rewards:
+    - "Magnificent! You've mastered the art of file searching!"
+    - "The 'find' command will serve you well in your future adventures."
+    - "You've located all the ancient texts in the Search Chamber."
+
+  cleanup_commands:
+    - "rm -rf search_chamber"
+
+- id: "text_editor_lair"
+  title: "The Text Editor's Lair"
+  description: "Conquer cat, head, tail, and less commands for text mastery"
+  category: "text_processing"
+  difficulty: "beginner"
+  points: 15
+
+  story: |
+    Deep in the Archive Caverns, you discover the Text Editor's Lair - a place 
+    where ancient manuscripts hold the secrets of text manipulation. The ghostly 
+    Text Editor appears before you, its eyes glowing with digital wisdom.
+    
+    "To pass through my domain," it intones, "you must prove your mastery over 
+    text. Show me you can reveal the contents of my sacred scrolls, and I shall 
+    grant you passage to greater challenges."
+
+  setup_commands:
+    - "mkdir -p text_lair"
+    - "echo -e 'Line 1: The beginning of wisdom\\nLine 2: Knowledge is power\\nLine 3: Practice makes perfect\\nLine 4: Never give up\\nLine 5: The end is just another beginning' > text_lair/sacred_scroll.txt"
+
+  challenge: "Display the contents of the sacred_scroll.txt file in the text_lair directory"
+
+  expected_command: "cat text_lair/sacred_scroll.txt"
+  expected_output: |
+    Line 1: The beginning of wisdom
+    Line 2: Knowledge is power
+    Line 3: Practice makes perfect
+    Line 4: Never give up
+    Line 5: The end is just another beginning
+
+  hints:
+    - "The 'cat' command displays the entire contents of a text file"
+    - "The file you need to examine is at text_lair/sacred_scroll.txt"
+    - "Use: cat text_lair/sacred_scroll.txt"
+
+  rewards:
+    - "Excellent! The Text Editor nods in approval!"
+    - "You've learned the fundamental 'cat' command for reading text files."
+    - "The wisdom of the sacred scroll is now yours to keep."
+
+  cleanup_commands:
+    - "rm -rf text_lair"
+
+- id: "permission_fortress"
+  title: "The Permission Fortress"
+  description: "Understand chmod, chown, and file permissions"
+  category: "permissions"
+  difficulty: "intermediate"
+  points: 25
+
+  story: |
+    You approach the imposing Permission Fortress, its walls shimmering with 
+    digital locks and access controls. The Fortress Guardian, a stern figure 
+    made of pure code, blocks your path.
+    
+    "None may pass without understanding the sacred laws of permissions," 
+    declares the Guardian. "Files and directories are protected by ancient 
+    access rights. Prove you can modify these permissions, and the fortress 
+    gates shall open."
+
+  setup_commands:
+    - "mkdir -p permission_fortress"
+    - "touch permission_fortress/locked_treasure.txt"
+    - "chmod 000 permission_fortress/locked_treasure.txt"
+    - "echo 'Congratulations! You have unlocked the treasure!' > permission_fortress/treasure_contents.txt"
+
+  challenge: "Make the locked_treasure.txt file readable by everyone using chmod"
+
+  expected_command: "regex:chmod.*[4567][4567][4567].*permission_fortress/locked_treasure\\.txt"
+
+  hints:
+    - "The 'chmod' command changes file permissions"
+    - "Use numeric notation: 4=read, 2=write, 1=execute"
+    - "To make a file readable by all: chmod 444 filename"
+    - "Try: chmod 644 permission_fortress/locked_treasure.txt"
+
+  rewards:
+    - "Incredible! You've mastered the art of file permissions!"
+    - "The fortress gates swing open, recognizing your authority."
+    - "chmod is now part of your toolkit for managing access rights."
+
+  cleanup_commands:
+    - "rm -rf permission_fortress"
+
+- id: "link_laboratory"
+  title: "The Link Laboratory"
+  description: "Connect files and directories with ln and symbolic links"
+  category: "file_operations"
+  difficulty: "advanced"
+  points: 30
+
+  story: |
+    In the deepest part of the digital realm lies the mysterious Link Laboratory, 
+    where the fabric of the file system bends and connects in impossible ways. 
+    The Lab Master, a being of pure interconnection, presents you with a challenge.
+    
+    "Behold the power of links!" exclaims the Master. "Files can exist in 
+    multiple places simultaneously through the magic of symbolic connections. 
+    Master this ancient art, and you shall command the very structure of the 
+    digital realm."
+
+  setup_commands:
+    - "mkdir -p link_lab/original link_lab/shortcuts"
+    - "echo 'This is the original magical artifact' > link_lab/original/magic_artifact.txt"
+
+  challenge: "Create a symbolic link named 'shortcut_to_artifact' in the shortcuts directory that points to the magic_artifact.txt file"
+
+  expected_command: "regex:ln\\s+-s.*magic_artifact\\.txt.*shortcut_to_artifact"
+
+  hints:
+    - "The 'ln' command creates links between files"
+    - "Use 'ln -s' to create a symbolic (soft) link"
+    - "Syntax: ln -s source_file link_name"
+    - "Try: ln -s ../original/magic_artifact.txt link_lab/shortcuts/shortcut_to_artifact"
+
+  rewards:
+    - "Phenomenal! You've mastered the mysteries of symbolic links!"
+    - "The Lab Master bows in respect to your linking prowess."
+    - "You can now create connections that transcend directory boundaries."
+
+  cleanup_commands:
+    - "rm -rf link_lab"
+
+- id: "archive_vault"
+  title: "The Archive Vault"
+  description: "Compress and extract files with tar, gzip, and zip"
+  category: "archives"
+  difficulty: "advanced"
+  points: 35
+
+  story: |
+    Your quest leads you to the legendary Archive Vault, where countless 
+    treasures are compressed into mystical containers to save space and 
+    preserve their essence. The Vault Keeper, ancient beyond measure, guards 
+    the secrets of compression magic.
+    
+    "Many files enter, but few emerge unchanged," warns the Keeper. "To claim 
+    the ultimate treasure, you must prove you can both seal files into archives 
+    and liberate them when needed. The power of compression shall be yours!"
+
+  setup_commands:
+    - "mkdir -p archive_vault/treasure_collection"
+    - "echo 'Golden coins from distant lands' > archive_vault/treasure_collection/gold.txt"
+    - "echo 'Precious gems that shine like stars' > archive_vault/treasure_collection/gems.txt"
+    - "echo 'Ancient scrolls of forgotten wisdom' > archive_vault/treasure_collection/scrolls.txt"
+
+  challenge: "Create a tar archive named 'treasure_archive.tar' containing all files from the treasure_collection directory"
+
+  expected_command: "regex:tar.*-c.*treasure_collection.*treasure_archive\\.tar"
+
+  hints:
+    - "The 'tar' command creates and extracts archives"
+    - "Use 'tar -c' to create an archive"
+    - "Use 'tar -f' to specify the archive filename"
+    - "Try: tar -cf treasure_archive.tar archive_vault/treasure_collection/*"
+
+  rewards:
+    - "Legendary! You've conquered the final challenge!"
+    - "The Vault Keeper grants you the title of Archive Master!"
+    - "You now possess the power to compress and preserve digital treasures!"
+    - "[COMPLETE] Congratulations! You have completed the Terminal Command Quest!"
+
+  cleanup_commands:
+    - "rm -rf archive_vault"
+    - "rm -f treasure_archive.tar"

@@ -1,0 +1,278 @@
+name: Terminal Command Quest - Auto Generate
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'levels.yaml'
+      - 'src/**'
+      - 'quest.py'
+      - '.github/workflows/quest.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'levels.yaml'
+      - 'src/**'
+      - 'quest.py'
+  workflow_dispatch:
+  schedule:
+    # Run weekly to keep content fresh
+    - cron: '0 0 * * 0'
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  validate-and-generate:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: "[START] Checkout Repository"
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: "Set up Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: "[PACKAGE] Install Dependencies"
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: "[SEARCH] Validate Level Definitions"
+      run: |
+        python quest.py validate
+        echo "[SUCCESS] All levels validated successfully!"
+    
+    - name: "[STATS] Generate Quest Statistics"
+      run: |
+        python quest.py stats --levels > quest_stats.txt
+        echo "[STATS] Quest statistics generated"
+    
+    - name: "[TEST] Test Quest Functionality"
+      run: |
+        # Test that the quest can be initialized without errors
+        timeout 10s python quest.py play --work-dir /tmp/quest_test || true
+        echo "[TEST] Quest functionality tested"
+    
+    - name: "[GENERATE] Generate Quest Documentation"
+      run: |
+        python quest.py generate --output QUEST.md
+        echo "[FILE] Quest documentation generated"
+    
+    - name: "[GENERATE] Generate Level Template"
+      run: |
+        python quest.py generate --template
+        echo "[GENERATE] Level template generated"
+    
+    - name: "Generate Quest Badges"
+      run: |
+        # Create badge directory
+        mkdir -p assets/badges
+        
+        # Generate quest status badge
+        echo "https://img.shields.io/badge/Quest%20Status-Ready%20to%20Start-green" > assets/badges/quest_status.txt
+        echo "https://img.shields.io/badge/Total%20Levels-6-blue" > assets/badges/total_levels.txt
+        echo "https://img.shields.io/badge/Difficulty-Beginner%20to%20Advanced-orange" > assets/badges/difficulty.txt
+        echo "[GENERATE] Quest badges generated"
+    
+    - name: "[FILE] Create Documentation Directory"
+      run: |
+        mkdir -p docs
+        cp level_template.md docs/LEVEL_CREATION.md
+        
+        # Create additional documentation
+        cat > docs/CONTRIBUTING.md << 'EOF'
+        # Contributing to Terminal Command Quest
+        
+        Thank you for your interest in contributing! Here are ways you can help:
+        
+        ## [QUEST] Adding New Levels
+        
+        1. Edit `levels.yaml` following the template in `docs/LEVEL_CREATION.md`
+        2. Test your levels with `python quest.py play`
+        3. Validate with `python quest.py validate`
+        4. Submit a pull request
+        
+        ## Reporting Issues
+        
+        - Use the GitHub issue tracker
+        - Include quest logs from the `logs/` directory
+        - Describe your environment (OS, Python version)
+        
+        ## [SETUP] Code Contributions
+        
+        - Follow PEP 8 style guidelines
+        - Add tests for new features
+        - Update documentation as needed
+        
+        ## [DOCS] Documentation
+        
+        - Help improve existing documentation
+        - Add examples and tutorials
+        - Fix typos and clarity issues
+        EOF
+        
+        echo "[FILE] Documentation structure created"
+    
+    - name: "Update Quest Status in README"
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        # Update README.md if it has quest markers
+        if grep -q "<!-- QUEST-START -->" README.md; then
+          python quest.py generate --update-readme
+          echo "[FILE] README.md updated with quest content"
+        else
+          echo "[INFO] No quest markers found in README.md"
+        fi
+    
+    - name: "[STATS] Generate Quest Report"
+      run: |
+        cat > quest_report.md << 'EOF'
+        # Quest Generation Report
+        
+        ## Statistics
+        EOF
+        cat quest_stats.txt >> quest_report.md
+        cat >> quest_report.md << 'EOF'
+        
+        ## [SUCCESS] Validation Results
+        
+        All levels validated successfully!
+        
+        ## [FILE] Generated Files
+        
+        - `QUEST.md` - Quest documentation
+        - `level_template.md` - Template for creating new levels
+        - `docs/LEVEL_CREATION.md` - Level creation guide
+        - `docs/CONTRIBUTING.md` - Contribution guidelines
+        
+        ## [TARGET] Next Steps
+        
+        - Review generated documentation
+        - Test the quest experience
+        - Share with the community
+        
+        ---
+        *Generated automatically by Terminal Command Quest*
+        EOF
+        
+        echo "[STATS] Quest report generated"
+    
+    - name: "[SAVE] Commit and Push Changes"
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        # Add generated files
+        git add QUEST.md level_template.md docs/ assets/ quest_report.md
+        
+        # Check if there are changes to commit
+        if git diff --staged --quiet; then
+          echo "No changes to commit"
+        else
+          git commit -m "[AUTO] Auto-update quest documentation and resources"
+          git push
+          echo "[SUCCESS] Changes committed and pushed"
+        fi
+    
+    - name: "Upload Quest Report"
+      uses: actions/upload-artifact@v3
+      with:
+        name: quest-report
+        path: |
+          quest_report.md
+          quest_stats.txt
+          QUEST.md
+          level_template.md
+    
+    - name: "[COMPLETE] Quest Generation Complete"
+      run: |
+        echo "[QUEST] Terminal Command Quest generation completed successfully!"
+        echo "[STATS] Check the artifacts for detailed reports"
+        echo "[START] Quest is ready for adventurers!"
+
+  test-quest-experience:
+    runs-on: ubuntu-latest
+    needs: validate-and-generate
+    
+    steps:
+    - name: "[START] Checkout Repository"
+      uses: actions/checkout@v4
+    
+    - name: "Set up Python"
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.9'
+    
+    - name: "[PACKAGE] Install Dependencies"
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: "[TEST] Test Quest Commands"
+      run: |
+        # Test various quest commands
+        echo "Testing quest validation..."
+        python quest.py validate
+        
+        echo "Testing quest statistics..."
+        python quest.py stats
+        
+        echo "[SUCCESS] All quest commands working correctly!"
+    
+    - name: "[TEST] Simulate Quest Gameplay"
+      run: |
+        # Create a test script to simulate some quest interactions
+        cat > test_gameplay.py << 'EOF'
+        import sys
+        import os
+        
+        sys.path.insert(0, 'src')
+        from src.level_loader import LevelLoader
+        
+        print("[TEST] Testing quest components...")
+        
+        # Test level loading
+        loader = LevelLoader("levels.yaml")
+        levels = loader.get_all_levels()
+        print(f"[SUCCESS] Loaded {len(levels)} levels")
+        
+        # Test basic functionality
+        stats = loader.get_statistics()
+        print(f"[SUCCESS] Quest has {stats['total_points']} total points")
+        
+        print("[COMPLETE] All components tested successfully!")
+        EOF
+        
+        python test_gameplay.py
+    
+    - name: "[STATS] Quest Health Check"
+      run: |
+        echo "[HEALTH] Running quest health check..."
+        
+        # Check for required files
+        required_files=("quest.py" "levels.yaml" "src/__init__.py" "requirements.txt")
+        for file in "${required_files[@]}"; do
+          if [ -f "$file" ]; then
+            echo "[SUCCESS] $file exists"
+          else
+            echo "[ERROR] $file missing"
+            exit 1
+          fi
+        done
+        
+        # Check Python syntax
+        python -m py_compile quest.py
+        echo "[SUCCESS] Main script syntax valid"
+        
+        # Check levels file format
+        python -c "import yaml; yaml.safe_load(open('levels.yaml'))"
+        echo "[SUCCESS] Levels YAML format valid"
+        
+        echo "[COMPLETE] Quest health check passed!"

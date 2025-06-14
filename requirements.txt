@@ -1,0 +1,13 @@
+# Terminal Command Quest Requirements
+# Core dependencies for the quest system
+
+# YAML parsing for level definitions
+PyYAML>=6.0
+
+# Cross-platform colored terminal output
+colorama>=0.4.4
+
+# Development dependencies (optional, for contributors)
+# pytest>=7.0          # For running tests
+# black>=22.0          # Code formatting
+# flake8>=4.0          # Code linting 
